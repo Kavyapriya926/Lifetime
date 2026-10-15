@@ -1,7 +1,14 @@
 node_modules/
 .env
+.env.*
+!.env.example
 .DS_Store
 npm-debug.log*
+cloudflare.env
+wrangler.toml
+.wrangler/
+.data/
+dist/
 data/*.sqlite
 data/*.sqlite-shm
 data/*.sqlite-wal
