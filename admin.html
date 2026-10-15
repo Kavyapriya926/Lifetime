@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>LifeTime | Registration Dashboard</title>
+    <link rel="stylesheet" href="/admin-assets/admin.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+    <script src="/admin-assets/admin.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="LifeTime home">
+          <span class="brand-mark">L</span>
+          <span>LifeTime <small>ADMIN</small></span>
+        </a>
+        <a class="back-link" href="/">Back to website</a>
+      </header>
+
+      <section id="loginPanel" class="login-panel panel">
+        <p class="eyebrow">PRIVATE ADMIN AREA</p>
+        <h1>Welcome back</h1>
+        <p class="muted">Sign in to view and manage early access registrations.</p>
+        <form id="loginForm">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" required />
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+          <button class="button primary" type="submit">Sign in</button>
+          <p id="loginMessage" class="message" role="status"></p>
+        </form>
+      </section>
+
+      <section id="dashboardPanel" class="dashboard-panel" hidden>
+        <div class="dashboard-heading">
+          <div>
+            <p class="eyebrow">EARLY ACCESS</p>
+            <h1>Registrations</h1>
+            <p class="muted">Search, export, or remove waitlist entries.</p>
+          </div>
+          <button id="logoutButton" class="button secondary" type="button">Sign out</button>
+        </div>
+
+        <section class="stats-grid" aria-label="Registration summary">
+          <article class="stat-card">
+            <span>Total registrations</span>
+            <strong id="totalCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Welcome emails sent</span>
+            <strong id="emailCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Awaiting email setup or retry</span>
+            <strong id="pendingCount">0</strong>
+          </article>
+        </section>
+
+        <section class="registrations-panel panel">
+          <div class="toolbar">
+            <label class="search-field">
+              <span class="sr-only">Search registrations</span>
+              <input id="searchInput" type="search" placeholder="Search name, email, city, interest..." />
+            </label>
+            <button id="exportButton" class="button secondary" type="button">Export CSV</button>
+            <button id="refreshButton" class="button secondary" type="button">Refresh</button>
+          </div>
+          <p id="dashboardMessage" class="message" role="status"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Interest</th>
+                  <th>City</th>
+                  <th>Registered</th>
+                  <th>Email status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="registrationRows"></tbody>
+            </table>
+            <p id="emptyState" class="empty-state" hidden>No registrations match your search.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

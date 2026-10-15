@@ -107,19 +107,25 @@
               <div class="form-grid">
                 <div class="field-group">
                   <label for="name">Your Name</label>
-                  <input id="name" name="name" type="text" placeholder="Your Name" />
+                  <input id="name" name="name" type="text" placeholder="Your Name" autocomplete="name" required />
                   <span class="field-error" data-error-for="name"></span>
                 </div>
 
                 <div class="field-group">
+                  <label for="email">Email Address</label>
+                  <input id="email" name="email" type="email" placeholder="Email Address" autocomplete="email" required />
+                  <span class="field-error" data-error-for="email"></span>
+                </div>
+
+                <div class="field-group">
                   <label for="mobile">Mobile Number</label>
-                  <input id="mobile" name="mobile" type="tel" placeholder="Mobile Number" />
+                  <input id="mobile" name="mobile" type="tel" placeholder="Mobile Number" autocomplete="tel" required />
                   <span class="field-error" data-error-for="mobile"></span>
                 </div>
 
                 <div class="field-group">
                   <label for="interest">Select Your Interest</label>
-                  <select id="interest" name="interest">
+                  <select id="interest" name="interest" required>
                     <option value="">Select Your Interest</option>
                     <option>Loans</option>
                     <option>Insurance</option>
@@ -131,7 +137,7 @@
 
                 <div class="field-group">
                   <label for="city">City</label>
-                  <input id="city" name="city" type="text" placeholder="City" />
+                  <input id="city" name="city" type="text" placeholder="City" autocomplete="address-level2" required />
                   <span class="field-error" data-error-for="city"></span>
                 </div>
               </div>
@@ -347,6 +353,7 @@
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
             <a href="#">Contact</a>
+            <a href="/admin">Admin</a>
           </div>
         </div>
       </div>

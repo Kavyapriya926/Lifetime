@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     const form = $(this);
     const name = $('#name').val().trim();
+    const email = $('#email').val().trim();
     const mobile = $('#mobile').val().trim();
     const interest = $('#interest').val();
     const city = $('#city').val().trim();
@@ -42,12 +43,17 @@ $(document).ready(function () {
     };
 
     clearError('name');
+    clearError('email');
     clearError('mobile');
     clearError('interest');
     clearError('city');
 
     if (!name) {
       setError('name', 'Please enter your name.');
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('email', 'Please enter a valid email address.');
     }
 
     if (!mobile || !/^\d{10}$/.test(mobile)) {
@@ -62,12 +68,41 @@ $(document).ready(function () {
       setError('city', 'Please enter your city.');
     }
 
-    if (isValid) {
-      $('.success-message').addClass('visible');
-      form[0].reset();
-    } else {
+    if (!isValid) {
       $('.success-message').removeClass('visible');
+      return;
     }
+
+    const submitButton = form.find('button[type="submit"]');
+    const originalText = submitButton.html();
+    $('.success-message').removeClass('error warning visible');
+    submitButton.prop('disabled', true).html('Registering...');
+
+    $.ajax({
+      url: '/api/register',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ name, email, mobile, interest, city }),
+      success: function (response) {
+        $('.success-message')
+          .text(response.message || 'Thank you! You have been added to the early access list.')
+          .removeClass('error')
+          .toggleClass('warning', response.emailSent === false)
+          .addClass('visible');
+        form[0].reset();
+      },
+      error: function (xhr) {
+        const message = xhr.responseJSON?.message || 'Something went wrong. Please try again.';
+        $('.success-message')
+          .text(message)
+          .addClass('visible')
+          .removeClass('warning')
+          .addClass('error');
+      },
+      complete: function () {
+        submitButton.prop('disabled', false).html(originalText);
+      }
+    });
   });
 
   // Scroll to top when clicking footer links if needed

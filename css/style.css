@@ -437,6 +437,18 @@ select {
   animation: fadeIn 0.35s ease;
 }
 
+.success-message.error {
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+  border-color: rgba(220, 38, 38, 0.18);
+}
+
+.success-message.warning {
+  background: rgba(242, 169, 0, 0.1);
+  color: #805600;
+  border-color: rgba(242, 169, 0, 0.25);
+}
+
 .hero-visual {
   position: relative;
   display: flex;
