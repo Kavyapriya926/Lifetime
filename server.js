@@ -148,12 +148,13 @@ async function sendWelcomeEmail({ name, email }) {
   await transporter.sendMail({
     from: process.env.SMTP_FROM || SMTP_USER,
     to: email,
-    subject: 'Welcome to LifeTime — Your Early Access Is Confirmed',
-    text: `Welcome, ${name}! Thank you for joining the LifeTime early access list. We will reach out soon with product updates and launch news.`,
+    subject: 'LifeTime registration successful',
+    text: `Hello ${name},\n\nYou have successfully registered for early access to LifeTime. Thank you for joining us. We will reach out soon with product updates and launch news.\n\nBest regards,\nThe LifeTime Team`,
     html: `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937;">
-        <h2 style="color: #0f172a;">Welcome, ${escapeHtml(name)}!</h2>
-        <p>Thank you for joining the LifeTime early access list.</p>
+        <h2 style="color: #0f172a;">Registration successful, ${escapeHtml(name)}!</h2>
+        <p>You have successfully registered for early access to LifeTime.</p>
+        <p>Thank you for joining us.</p>
         <p>We are excited to keep you informed about our financial solutions, product updates, and launch news.</p>
         <p>We will reach out soon with the next steps.</p>
         <p>Best regards,<br />The LifeTime Team</p>
