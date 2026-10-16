@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  $.ajaxSetup({ xhrFields: { withCredentials: true } });
+
   // Keep all sections visible by default; do not hide them with reveal logic.
   $('.reveal').addClass('is-visible');
 
@@ -79,7 +81,7 @@ $(document).ready(function () {
     submitButton.prop('disabled', true).html('Registering...');
 
     $.ajax({
-      url: '/api/register',
+      url: apiUrl('/api/register'),
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({ name, email, mobile, interest, city }),

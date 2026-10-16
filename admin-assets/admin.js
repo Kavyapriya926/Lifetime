@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  $.ajaxSetup({ xhrFields: { withCredentials: true } });
+
   let registrations = [];
   const loginPanel = $('#loginPanel');
   const dashboardPanel = $('#dashboardPanel');
@@ -78,7 +80,7 @@ $(document).ready(function () {
   function retryEmail(entry) {
     $('#dashboardMessage').text('');
     $.ajax({
-      url: `/api/admin/registrations/${encodeURIComponent(entry.id)}/retry-email`,
+      url: apiUrl(`/api/admin/registrations/${encodeURIComponent(entry.id)}/retry-email`),
       method: 'POST',
     })
       .done((response) => {
@@ -93,7 +95,7 @@ $(document).ready(function () {
   function loadRegistrations() {
     $('#dashboardMessage').text('');
     $('#refreshButton').prop('disabled', true);
-    $.getJSON('/api/admin/registrations')
+    $.getJSON(apiUrl('/api/admin/registrations'))
       .done((response) => {
         registrations = response.registrations;
         renderRegistrations();
@@ -114,7 +116,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: `/api/admin/registrations/${encodeURIComponent(entry.id)}`,
+      url: apiUrl(`/api/admin/registrations/${encodeURIComponent(entry.id)}`),
       method: 'DELETE',
     })
       .done(() => {
@@ -162,7 +164,7 @@ $(document).ready(function () {
     $('#loginMessage').text('');
 
     $.ajax({
-      url: '/api/admin/login',
+      url: apiUrl('/api/admin/login'),
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
@@ -181,14 +183,14 @@ $(document).ready(function () {
   });
 
   $('#logoutButton').on('click', function () {
-    $.post('/api/admin/logout').always(() => showLogin('You have been signed out.'));
+    $.post(apiUrl('/api/admin/logout')).always(() => showLogin('You have been signed out.'));
   });
 
   $('#searchInput').on('input', renderRegistrations);
   $('#refreshButton').on('click', loadRegistrations);
   $('#exportButton').on('click', exportCsv);
 
-  $.getJSON('/api/admin/me')
+  $.getJSON(apiUrl('/api/admin/me'))
     .done(showDashboard)
     .fail((xhr) => {
       if (xhr.status === 503) {

@@ -18,7 +18,14 @@ const ADMIN_PAGE = path.join(__dirname, 'admin.html');
 const INTERESTS = new Set(['Loans', 'Insurance', 'Investments', 'Wealth Solutions']);
 const ADMIN_SESSION_COOKIE = 'lifetime_admin';
 const ADMIN_SESSION_DURATION = 4 * 60 * 60 * 1000;
+const allowedOrigins = new Set(
+  (process.env.FRONTEND_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+);
 
+app.set('trust proxy', 1);
 fs.mkdirSync(DATA_DIR, { recursive: true });
 fs.mkdirSync(path.dirname(DATABASE_FILE), { recursive: true });
 const db = new Database(DATABASE_FILE);
@@ -83,6 +90,26 @@ if (!hasImportedLegacyData) {
   });
   importLegacyData(legacyRegistrations);
 }
+
+app.use((req, res, next) => {
+  const origin = req.get('Origin');
+  if (!origin) {
+    return next();
+  }
+  if (!allowedOrigins.has(origin)) {
+    return res.status(403).json({ success: false, message: 'This website is not allowed to access the API.' });
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.vary('Origin');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  return next();
+});
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
@@ -333,13 +360,18 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
     return res.status(401).json({ success: false, message: 'The username or password is incorrect.' });
   }
 
-  const secureCookie = process.env.NODE_ENV === 'production' ? ' Secure;' : '';
-  res.setHeader('Set-Cookie', `${ADMIN_SESSION_COOKIE}=${createAdminToken(username)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${ADMIN_SESSION_DURATION / 1000};${secureCookie}`);
+  const productionCookieAttributes = process.env.NODE_ENV === 'production'
+    ? ' Secure; SameSite=None;'
+    : ' SameSite=Strict;';
+  res.setHeader('Set-Cookie', `${ADMIN_SESSION_COOKIE}=${createAdminToken(username)}; HttpOnly;${productionCookieAttributes} Path=/; Max-Age=${ADMIN_SESSION_DURATION / 1000}`);
   return res.json({ success: true });
 });
 
 app.post('/api/admin/logout', (req, res) => {
-  res.setHeader('Set-Cookie', `${ADMIN_SESSION_COOKIE}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`);
+  const productionCookieAttributes = process.env.NODE_ENV === 'production'
+    ? ' Secure; SameSite=None;'
+    : ' SameSite=Strict;';
+  res.setHeader('Set-Cookie', `${ADMIN_SESSION_COOKIE}=; HttpOnly;${productionCookieAttributes} Path=/; Max-Age=0`);
   return res.json({ success: true });
 });
 
